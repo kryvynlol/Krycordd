@@ -7,10 +7,7 @@ Aplicativo privado de chat e chamadas para amigos. Node.js + Socket.IO + WebRTC.
 2. Extraia a pasta.
 3. Abra o terminal dentro da pasta do projeto.
 4. Execute `npm install`.
-5. Defina a senha de acesso:
-   - Windows PowerShell: `$env:ACCESS_PASSWORD="sua-senha"`
-   - macOS/Linux: `ACCESS_PASSWORD="sua-senha"`
-6. Execute `npm start`.
+5. 6. Execute `npm start`.
 7. Abra http://localhost:3000
 
 ## Hospedar no Render

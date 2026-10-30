@@ -1,8 +1,8 @@
 const $=id=>document.getElementById(id);
 let token="",name="",socket=null,room="AMIGOS",localStream=null,screenStream=null,inCall=false,micOn=true,cameraOn=false,peers=new Map(),peerNames=new Map(),remoteStreams=new Map();
 const config={iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun1.l.google.com:19302"}]};
-$("loginBtn").onclick=async()=>{name=$("nickname").value.trim();try{const r=await fetch("/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,password:$("password").value})});const d=await r.json();if(!r.ok)throw Error(d.error);token=d.token;start();}catch(e){$("loginError").textContent=e.message;}};
-$("password").addEventListener("keydown",e=>{if(e.key==="Enter")$("loginBtn").click()});
+$("loginBtn").onclick=async()=>{name=$("nickname").value.trim();try{const r=await fetch("/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name})});const d=await r.json();if(!r.ok)throw Error(d.error);token=d.token;start();}catch(e){$("loginError").textContent=e.message;}};
+$("nickname").addEventListener("keydown",e=>{if(e.key==="Enter")$("loginBtn").click()});
 function start(){ $("login").classList.add("hidden");$("app").classList.remove("hidden");$("userName").textContent=name;$("avatar").textContent=name[0].toUpperCase();connect(); }
 function connect(){socket=io({auth:{token}});socket.on("connect",()=>joinRoom(room));socket.on("connect_error",()=>{$("login").classList.remove("hidden");$("app").classList.add("hidden");$("loginError").textContent="Sessão expirada. Entre novamente.";});socket.on("peer-joined",p=>{peerNames.set(p.id,p.name);updateCount();if(inCall)makePeer(p.id,true);});socket.on("peer-left",({id})=>{closePeer(id);updateCount();});socket.on("signal",async({from,data})=>handleSignal(from,data));socket.on("chat-message",renderMessage);}
 function joinRoom(r){room=r;$("roomLabel").textContent=room;socket.emit("join-room",{room},d=>{d.peers.forEach(p=>peerNames.set(p.id,p.name));d.history.forEach(renderMessage);updateCount();});}

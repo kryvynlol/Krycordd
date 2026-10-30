@@ -12,9 +12,7 @@ Este projeto já está preparado para Render como **Web Service Node.js**.
    - Runtime: Node
    - Build Command: `npm install`
    - Start Command: `npm start`
-6. Em **Environment Variables**, adicione:
-   - `ACCESS_PASSWORD` = uma senha forte que você vai compartilhar somente com seus amigos.
-   - `SESSION_SECRET` = uma chave aleatória longa e privada.
+6. Em **Environment Variables**, mantenha `SESSION_SECRET` como uma chave aleatória longa e privada (o Render pode gerar automaticamente pelo `render.yaml`).
 7. Clique em Deploy. Quando terminar, abra o endereço `https://...onrender.com`.
 
 ## Entrar com seus amigos
@@ -29,7 +27,7 @@ Este projeto já está preparado para Render como **Web Service Node.js**.
 - Render fornece HTTPS, necessário para câmera, microfone e compartilhamento de tela fora de `localhost`.
 - A chamada usa WebRTC com STUN público. Algumas combinações de roteador/rede exigem um servidor TURN para conectar mídia; sem TURN, áudio/vídeo pode não funcionar em todas as redes.
 - O projeto é mais adequado a grupos pequenos porque a mídia é enviada diretamente entre participantes.
-- A senha é compartilhada por todos; esta versão ainda não tem convites individuais nem cadastro de contas.
+- Não há senha nem contas individuais: qualquer pessoa que tenha o endereço pode entrar escolhendo um apelido. Compartilhe o link somente com seus amigos.
 - O histórico do chat fica apenas na memória do servidor e pode ser apagado quando o serviço reiniciar.
 - No plano gratuito do Render, o serviço pode entrar em suspensão após inatividade e demorar um pouco para acordar.
 

@@ -6,13 +6,12 @@ const path=require("path");
 const app=express(), server=http.createServer(app);
 const io=new Server(server,{cors:{origin:false}});
 const PORT=process.env.PORT||3000;
-const ACCESS_PASSWORD=process.env.ACCESS_PASSWORD||"troque-esta-senha";
 const SECRET=process.env.SESSION_SECRET||crypto.randomBytes(32).toString("hex");
 app.use(express.json());
 app.use(express.static(path.join(__dirname,"public")));
 function sign(payload){const body=Buffer.from(JSON.stringify(payload)).toString("base64url");return body+"."+crypto.createHmac("sha256",SECRET).update(body).digest("base64url");}
 function verify(token){try{const [body,sig]=token.split(".");const expected=crypto.createHmac("sha256",SECRET).update(body).digest("base64url");if(!crypto.timingSafeEqual(Buffer.from(sig),Buffer.from(expected)))return null;const p=JSON.parse(Buffer.from(body,"base64url"));return p.exp>Date.now()?p:null;}catch{return null;}}
-app.post("/api/login",(req,res)=>{const {password,name}=req.body||{};if(password!==ACCESS_PASSWORD)return res.status(401).json({error:"Senha incorreta."});const clean=String(name||"").trim().slice(0,24);if(!clean)return res.status(400).json({error:"Digite um apelido."});res.json({token:sign({name:clean,exp:Date.now()+7*24*60*60*1000})});});
+app.post("/api/login",(req,res)=>{const {name}=req.body||{};const clean=String(name||"").trim().slice(0,24);if(!clean)return res.status(400).json({error:"Digite um apelido."});res.json({token:sign({name:clean,exp:Date.now()+7*24*60*60*1000})});});
 io.use((socket,next)=>{const p=verify(socket.handshake.auth?.token);if(!p)return next(new Error("Acesso não autorizado"));socket.user={name:p.name};next();});
 const roomHistory=new Map();
 io.on("connection",socket=>{
