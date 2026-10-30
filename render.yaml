@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: vyracord
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: ACCESS_PASSWORD
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
